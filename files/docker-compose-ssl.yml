@@ -3,7 +3,7 @@ version: '3'
 services:
 
   proxy:
-    image: jwilder/nginx-proxy
+    image: nginx
     labels:
       - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true"
     container_name: nextcloud-proxy
@@ -42,8 +42,6 @@ services:
     container_name: nextcloud-postgres
     networks:
       - nextcloud_network
-    ports:
-      - 5432:5432
     volumes:
       - ./db-data:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
@@ -62,15 +60,20 @@ services:
       - db
     volumes:
       - ./nextcloud:/var/www/html
-      - ./app/config:/var/www/html/config
+      #      - ./app/config:/var/www/html/config
       - ./app/custom_apps:/var/www/html/custom_apps
-      - ./app/data:/var/www/html/data
       - ./app/themes:/var/www/html/themes
+      # absolute
+      - /mnt/hdd/app/data:/var/www/html/data
       - /etc/localtime:/etc/localtime:ro
     environment:
-      - VIRTUAL_HOST=bati4eli.ddns.net
-      - LETSENCRYPT_HOST=bati4eli.ddns.net
-      - LETSENCRYPT_EMAIL=mister.happyend@yandex.ru
+      VIRTUAL_HOST: bati4eli.ru
+      LETSENCRYPT_HOST: bati4eli.ru
+      LETSENCRYPT_EMAIL: mister.happyend@yandex.ru
+      NEXTCLOUD_TRUSTED_DOMAINS: bati4eli.ru
+      NEXTCLOUD_ADMIN_USER: bati4eli
+      NEXTCLOUD_ADMIN_PASSWORD: qazwsxedc_123
+      NEXTCLOUD_DATA_DIR: /mnt/hdd/app/users_data #<- хз нафига.. ничего нет там
     restart: unless-stopped
 networks:
   nextcloud_network:

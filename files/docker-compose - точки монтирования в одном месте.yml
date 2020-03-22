@@ -41,6 +41,6 @@ services:
       NEXTCLOUD_ADMIN_USER: bati4eli
       NEXTCLOUD_ADMIN_PASSWORD: qazwsxedc_123
       NEXTCLOUD_DATA_DIR: ./ncusersdata
-      NEXTCLOUD_TRUSTED_DOMAINS: bati4eli.ddns.net
+      NEXTCLOUD_TRUSTED_DOMAINS: bati4eli.ru
     restart: always
 
