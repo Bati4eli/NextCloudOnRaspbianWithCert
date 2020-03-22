@@ -1,0 +1,46 @@
+version: '3'
+
+networks:
+  nextcloud_network:
+
+volumes:
+  db:
+  app:
+
+services:
+  db:
+    image: postgres
+    networks:
+      - nextcloud_network
+    restart: always
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      POSTGRES_PASSWORD: qazwsxedc_123
+
+  app:
+    depends_on:
+      - db
+    image: nextcloud
+    networks:
+      - nextcloud_network
+    ports:
+      - 80:80
+    volumes:
+      #      - ./nextcloud:/var/www/html
+      #      - ./app/config:/var/www/html/config
+      - ./app/custom_apps:/var/www/html/custom_apps
+      - ./app/data:/var/www/html/data
+      - ./app/themes:/var/www/html/themes
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      VIRTUAL_HOST: bati4eli.ru
+      LETSENCRYPT_HOST: bati4eli.ru
+      LETSENCRYPT_EMAIL: mister.happyend@yandex.ru
+      NEXTCLOUD_ADMIN_USER: bati4eli
+      NEXTCLOUD_ADMIN_PASSWORD: qazwsxedc_123
+      NEXTCLOUD_DATA_DIR: ./ncusersdata
+      NEXTCLOUD_TRUSTED_DOMAINS: bati4eli.ddns.net
+    restart: always
+
