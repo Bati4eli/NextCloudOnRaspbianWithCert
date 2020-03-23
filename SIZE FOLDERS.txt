@@ -1,0 +1,5 @@
+pi@raspberrypi:~ $ sudo du -sh /mnt/hdd/app
+2.0G    /mnt/hdd/app
+1.7G    /mnt/hdd/app/app/
+74M     /mnt/hdd/app/db
+288M    /mnt/hdd/app/nextcloud/

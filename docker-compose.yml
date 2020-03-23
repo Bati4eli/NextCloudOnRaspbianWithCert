@@ -1,0 +1,101 @@
+### Sources:
+### db & app:     https://www.galkov.pro/nextcloud_on_docker/
+### nginx & cert: https://hixon.ru/programmirovanie-2/delaem-https-sajtik-s-pomoshhyu-nginx-docker-compose-lets-encrypt.html
+
+version: '3'
+
+networks:
+  nextcloud_network:
+
+volumes:
+  db:
+  app:
+
+services:
+  nginx-web:
+    image: nginx
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true"
+    container_name: NGINX_WEB_1
+    networks:
+      - nextcloud_network
+    restart: always
+    ports:
+      - 80:80 #"${IP}:80:80"
+      - 443:443 #"${IP}:443:443"
+    volumes:
+      - ./proxy/conf.d:/etc/nginx/conf.d
+      - ./proxy/vhost.d:/etc/nginx/vhost.d
+      - ./proxy/html:/usr/share/nginx/html
+      - ./proxy/certs:/etc/nginx/certs:ro
+      - ./proxy/htpasswd:/etc/nginx/htpasswd:ro
+
+  nginx-gen:
+    image: jwilder/docker-gen
+    command: -notify-sighup NGINX_WEB_1 -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+    container_name: DOCKER_GEN_1
+    networks:
+      - nextcloud_network
+    restart: always
+    volumes:
+      - ./proxy/conf.d:/etc/nginx/conf.d
+      - ./proxy/vhost.d:/etc/nginx/vhost.d
+      - ./proxy/html:/usr/share/nginx/html
+      - ./proxy/certs:/etc/nginx/certs:ro
+      - ./proxy/htpasswd:/etc/nginx/htpasswd:ro
+      - ./nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  nginx-letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: LETS_ENCRYPT_1
+    networks:
+      - nextcloud_network
+    restart: always
+    volumes:
+      - ./proxy/conf.d:/etc/nginx/conf.d
+      - ./proxy/vhost.d:/etc/nginx/vhost.d
+      - ./proxy/html:/usr/share/nginx/html
+      - ./proxy/certs:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      NGINX_DOCKER_GEN_CONTAINER: DOCKER_GEN_1
+      NGINX_PROXY_CONTAINER: NGINX_WEB_1
+
+  db:
+    image: postgres
+    networks:
+      - nextcloud_network
+    restart: always
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      POSTGRES_PASSWORD: qazwsxedc_123
+
+  app:
+    depends_on:
+      - db
+      - nginx-web
+      - nginx-gen
+      - nginx-letsencrypt
+    image: nextcloud
+    networks:
+      - nextcloud_network
+    volumes:
+      #- ./nextcloud:/var/www/html
+      #- ./app/config:/var/www/html/config
+      - ./app/custom_apps:/var/www/html/custom_apps
+      - ./app/themes:/var/www/html/themes
+      # абсолютые пути
+      - /mnt/hdd/app/data:/var/www/html/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      VIRTUAL_HOST: bati4eli.ru
+      LETSENCRYPT_HOST: bati4eli.ru
+      LETSENCRYPT_EMAIL: mister.happyend@yandex.ru
+      NEXTCLOUD_ADMIN_USER: bati4eli
+      NEXTCLOUD_ADMIN_PASSWORD: qazwsxedc_123
+      NEXTCLOUD_DATA_DIR: /mnt/hdd/app/users_data #<- хз нафига.. ничего нет там
+      NEXTCLOUD_TRUSTED_DOMAINS: bati4eli.ru
+    restart: always
