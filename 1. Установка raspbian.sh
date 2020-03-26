@@ -24,7 +24,7 @@ sudo usermod -aG docker pi
 newgrp docker
 
 ### Optionally, store containers in an external USB drive. Change the following line (adjust accordingly)
-ExecStart=/usr/bin/dockerd -g /media/USBdrive/docker -H fd://
+ExecStart=/usr/bin/dockerd -g /mnt/hdd/docker -H fd://
 
 ### ***** DOCKER-COMPOSE *************************
 ### source: https://dev.to/rohansawant/installing-docker-and-docker-compose-on-the-raspberry-pi-in-5-simple-steps-3mgl
