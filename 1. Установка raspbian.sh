@@ -5,13 +5,28 @@
 ### * создаем в корне файл с именем "ssh"
 ### * подключаемся по ssh с логином: pi / raspberry
 ### *********
+
+
+#### обновление для 64 бит
+#### https://www.raspberrypi.org/forums/viewtopic.php?f=29&t=250730
+sudo rpi-update
+sudo nano /boot/config.txt
+# добавить строку:
+arm_64bit=1
+
+
+### UPDATE
 sudo apt-get update && sudo apt-get dist-upgrade
 
-### ***** DOCKER *****
+### ***** DOCKER *******************************
 $ curl -fsSL https://get.docker.com -o get-docker.sh
-$ sudo sh get-docker.sh
+sudo usermod -aG docker pi
+newgrp docker
 
-### ***** DOCKER-COMPOSE *****
+### Optionally, store containers in an external USB drive. Change the following line (adjust accordingly)
+ExecStart=/usr/bin/dockerd -g /media/USBdrive/docker -H fd://
+
+### ***** DOCKER-COMPOSE *************************
 ### source: https://dev.to/rohansawant/installing-docker-and-docker-compose-on-the-raspberry-pi-in-5-simple-steps-3mgl
 
 ### IMPORTANT! Install proper dependencies
@@ -22,7 +37,7 @@ sudo apt-get install -y python3 python3-pip
 sudo apt-get remove python-configparser
 
 
-### МОНТИРОВАНИЕ ДИСКА ####
+### МОНТИРОВАНИЕ ДИСКА ******************************
 pi@raspberrypi:~ $ fdisk -l
 ### Disk /dev/sda: 1.8 TiB, 2000398933504 bytes, 3907029167 sectors
 ### Disk model: D3 Station

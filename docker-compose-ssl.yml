@@ -65,7 +65,7 @@ services:
       - ./db-data:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
     environment:
-      - POSTGRES_PASSWORD=qazwsxedc_123
+      - POSTGRES_PASSWORD=#TODOPASS
     restart: unless-stopped
 
   app:
@@ -92,7 +92,7 @@ services:
       LETSENCRYPT_EMAIL: mister.happyend@yandex.ru
       NEXTCLOUD_TRUSTED_DOMAINS: bati4eli.ru
       NEXTCLOUD_ADMIN_USER: bati4eli
-      NEXTCLOUD_ADMIN_PASSWORD: qazwsxedc_123
+      NEXTCLOUD_ADMIN_PASSWORD: #TODOPASS
       NEXTCLOUD_DATA_DIR: /mnt/hdd/app/users_data #<- хз нафига.. ничего нет там
     restart: unless-stopped
 networks:
