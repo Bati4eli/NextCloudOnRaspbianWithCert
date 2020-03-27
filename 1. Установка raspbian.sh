@@ -14,27 +14,8 @@ sudo nano /boot/config.txt
 # добавить строку:
 arm_64bit=1
 
-
 ### UPDATE
 sudo apt-get update && sudo apt-get dist-upgrade
-
-### ***** DOCKER *******************************
-$ curl -fsSL https://get.docker.com -o get-docker.sh
-sudo usermod -aG docker pi
-newgrp docker
-
-### Optionally, store containers in an external USB drive. Change the following line (adjust accordingly)
-ExecStart=/usr/bin/dockerd -g /mnt/hdd/docker -H fd://
-
-### ***** DOCKER-COMPOSE *************************
-### source: https://dev.to/rohansawant/installing-docker-and-docker-compose-on-the-raspberry-pi-in-5-simple-steps-3mgl
-
-### IMPORTANT! Install proper dependencies
-sudo apt-get install -y libffi-dev libssl-dev
-
-sudo apt-get install -y python3 python3-pip
-
-sudo apt-get remove python-configparser
 
 
 ### МОНТИРОВАНИЕ ДИСКА ******************************
@@ -50,17 +31,16 @@ pi@raspberrypi:~ $ fdisk -l
 pi@raspberrypi:~ $ lsblk
 NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 sda           8:0    0  1.8T  0 disk
-└─sda1        8:1    0  1.8T  0 part
-mmcblk0     179:0    0 29.7G  0 disk
-├─mmcblk0p1 179:1    0  256M  0 part /boot
-└─mmcblk0p2 179:2    0 29.5G  0 part /
+  └─sda1        8:1    0  1.8T  0 part
+  mmcblk0     179:0    0 29.7G  0 disk
+  ├─mmcblk0p1 179:1    0  256M  0 part /boot
+  └─mmcblk0p2 179:2    0 29.5G  0 part /
 
 ### Прежде, чем монтировать разделы, нужно создать точки монтирования. 
 ### Точки монтирования следует создавать в каталогах /mnt или /media.
 ### Пример: Для того, чтобы создать точку монтирования с названием /mnt/hdd в консоли даём команду:
 
-sudo mkdir /mnt/hdd
-sudo chmod 777 /mnt/hdd
+sudo mkdir /mnt/hdd && sudo chmod 777 -R /mnt/hdd
 ### монтируем раздел /dev/sda1 типа ext4 в точку монтирования /mnt/hdd
 sudo mount -t ext4 /dev/sda1 /mnt/hdd
 ### для постоянного монтирования добавляем строку в файл /etc/fstab  
