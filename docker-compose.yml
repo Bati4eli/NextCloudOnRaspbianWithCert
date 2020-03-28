@@ -27,16 +27,16 @@ services:
   app:
     depends_on:
       - db
-    image: nextcloud
+    image: nextcloud:stable
     restart: always
     ports:
       - 8080:80
-      - 4443:443
     networks:
       - nextcloud_network
     volumes:
-      #- ./app/html:/var/www/html
-      #- ./app/config:/var/www/html/config
+      - ./app/html:/var/www/html
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./app/config:/var/www/html/config
       - ./app/custom_apps:/var/www/html/custom_apps
       - ./app/themes:/var/www/html/themes
       # абсолютые пути
@@ -44,10 +44,9 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       VIRTUAL_HOST: bati4eli.ru
-      LETSENCRYPT_HOST: bati4eli.ru
-      LETSENCRYPT_EMAIL: mister.happyend@yandex.ru
-      NEXTCLOUD_ADMIN_USER: bati4eli
-      NEXTCLOUD_ADMIN_PASSWORD: #TODOPASS
-      NEXTCLOUD_DATA_DIR: /mnt/hdd/app/users_data #<- хз нафига.. ничего нет там
-      NEXTCLOUD_TRUSTED_DOMAINS: bati4eli.ru
+      #LETSENCRYPT_HOST: bati4eli.ru
+      #LETSENCRYPT_EMAIL: mister.happyend@yandex.ru
+      NEXTCLOUD_ADMIN_USER: admin
+      NEXTCLOUD_ADMIN_PASSWORD: admin
+      NEXTCLOUD_TRUSTED_DOMAINS: bati4eli.ru 192.168.1.75
 
