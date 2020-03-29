@@ -1,13 +1,12 @@
+### ПОЛЕЗНАЯ СТАТЬЯ:: https://wiki.calculate-linux.org/ru/working_with_nextcloud
+
 ### https://www.galkov.pro/nextcloud_on_docker/
 ### создаем папку для хранения параметров развертывания контейнеров
 mkdir /app
 
-
 ### создаем файл с параметрами развертывания контейнеров /etc/docker/nc/docker-compose.yml
 ### см. docker-compose.yml
 ### ЗАПУСК
-sudo docker-compose -f /app/docker-compose.yml up -d
-### ИЛИ
 cd /app
 sudo docker-compose -f up -d
 
@@ -31,7 +30,24 @@ sudo docker-compose -f up -d
 ## после внесения изменений перезапускаем:
 sudo docker-compose restart
 
-### STOP
+### Выполняем проверку системы на странице админа
+### наверника там будет проблема с индексами и пример команды
+### Для того чтобы пофиксить эту проблему:
+docker exec -u www-data -it app_app_1 bash
+  php {команда}
+exit # - выход из терминала контейнера
+
+### Если вы обновляли файлы или лобавляли новые В ОБХОД веба или DAV
+### То нужно пересканировать библиотеку командой внутри контейнера:
+### {USER_NAME} - указать в каком пользователе копались
+sudo chown www-data:www-data -R /mnt/hdd/ncdata/USER_NAME/files
+docker exec -u www-data -it app_app_1 bash
+  php occ files:scan USER_NAME
+exit
+
+
+
+### Если нужно остановить все контейнеры:
 sudo docker-compose stop
 ### Эта команда позволяет останавливать и удалять контейнеры и другие ресурсы, 
 ### созданные командой docker-compose up:
