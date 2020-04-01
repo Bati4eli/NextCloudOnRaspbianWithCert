@@ -27,6 +27,24 @@ sudo docker-compose -f up -d
       1 => '192.168.1.75',
     ),
 
+### Выполняем рекомендации приложения: https://bati4eli.ru/settings/admin/overview
+docker exec -u www-data -it app_app_1 bash
+  php occ db:add-missing-indices
+  php occ db:convert-filecache-bigint
+exit
+
+### занимаемся любовью с доступом к файлам после записи их извне
+sudo chown www-data:www-data -R /mnt/hdd/ncdata/bati4eli/files;
+sudo find /mnt/hdd/ncdata/bati4eli/files -type f -exec chmod 644 {} \;
+sudo find /mnt/hdd/ncdata/bati4eli/files -type d -exec chmod 755 {} \;
+
+sudo chown www-data:www-data -R /mnt/hdd/ncdata/tweetyOlka/files;
+sudo find /mnt/hdd/ncdata/tweetyOlka/files -type f -exec chmod 644 {} \;
+sudo find /mnt/hdd/ncdata/tweetyOlka/files -type d -exec chmod 755 {} \;
+
+docker exec -u www-data -it app_app_1 bash
+  php occ files:scan --all
+exit
 ## после внесения изменений перезапускаем:
 sudo docker-compose restart
 
