@@ -2,6 +2,7 @@
 
 ### Если вы установили preview generator то придется дергать его с хостовой машины с помощью
 ### планировщика cron
+# service cron status
 
 crontab -e
 #ADD:
