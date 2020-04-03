@@ -25,10 +25,10 @@ services:
       POSTGRES_PASSWORD: qazwsxedc_123
 
   app:
-    build: ./mync
-    #    image: nextcloud:stable
+    #    command: sh -c "php ./occ config:app:set --value=\"32 64 1024\"  previewgenerator squareSizes";
     depends_on:
       - db
+    image: nextcloud:stable
     restart: always
     ports:
       - 8080:80

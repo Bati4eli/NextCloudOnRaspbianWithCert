@@ -10,6 +10,10 @@ mkdir /app
 cd /app
 sudo docker-compose -f up -d
 
+#показать команду запуска целиком
+docker ps --no-trunc
+sudo docker-compose up -d --force-recreate
+sudo docker-compose logs
 # !!!!!!!!!!!
 #TODO ВАЖНО посмотри после развертки контейнера.. конфиг: {nextcloud}/config/config.php
 #TODO Если этого не сделать, то приложение спрятанное за https прокси будет генерить невалидные ссылки
