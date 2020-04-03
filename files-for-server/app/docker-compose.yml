@@ -25,8 +25,9 @@ services:
       POSTGRES_PASSWORD: qazwsxedc_123
 
   app:
-    build: ./mync
-    #    image: nextcloud:stable
+    build:
+      context: ./mync
+    #image: nextcloud:stable
     depends_on:
       - db
     restart: always
@@ -37,11 +38,11 @@ services:
     volumes:
       #- ./nginx.conf:/etc/nginx/nginx.conf:ro
       #- ./php:/usr/local/etc/php
-      - ./app/html:/var/www/html
+      #- ./app/html:/var/www/html
       - ./app/config:/var/www/html/config
       - ./app/custom_apps:/var/www/html/custom_apps
       - ./app/themes:/var/www/html/themes
-      - ./app/nextcloud/:/var/www/nextcloud/
+      #- ./app/nextcloud/:/var/www/nextcloud/
       # абсолютые пути
       - /mnt/hdd/ncdata:/var/www/html/data
       - /etc/localtime:/etc/localtime:ro
