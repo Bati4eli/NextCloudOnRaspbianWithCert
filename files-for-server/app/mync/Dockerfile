@@ -8,9 +8,10 @@ ARG cronFilePath=/etc/cron.d/cron-file
 COPY cron-file $cronFilePath
 
 # Установка пакетов: крон, для обработки фоток и видео  # apt-transport-https
-# && echo "memory_limit = 1024M" >> $phpIniPath \
-RUN apt-get update && apt-get install -y cron imagemagick ffmpeg; \
-    echo 'request_terminate_timeout=600' >> $recommended; \
+RUN apt-get update && apt-get install -y cron imagemagick ffmpeg;
+
+# прописываем конфигурацию для PHP
+RUN echo 'request_terminate_timeout=600' >> $recommended; \
     \
     echo 'memory_limit=2000M' > $memoryLimit; \
     \
