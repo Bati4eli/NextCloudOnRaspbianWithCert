@@ -64,8 +64,7 @@ exit # - выход из терминала контейнера
 ### {USER_NAME} - указать в каком пользователе копались
 sudo chown www-data:www-data -R /mnt/hdd/ncdata/USER_NAME/files
 docker exec -u www-data -it app_app_1 bash
-  php occ files:scan USER_NAME
-  php occ trashbin:cleanup --all-users
+  php occ files:scan USER_NAME &&  php occ trashbin:cleanup --all-users
 exit
 
 

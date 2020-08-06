@@ -12,7 +12,11 @@ COPY cron-file $cronFilePath
 RUN apt-get update && apt-get install -y cron imagemagick ffmpeg; \
     echo 'request_terminate_timeout=600' >> $recommended; \
     \
-    echo 'memory_limit=2048M' > $memoryLimit; \
+    echo 'memory_limit=2000M' > $memoryLimit; \
+    \
+    echo 'upload_max_filesize=20G' >> $memoryLimit; \
+    \
+    echo 'post_max_size=21G' >> $memoryLimit; \
     \
     chmod 0644 $cronFilePath; \
     crontab $cronFilePath; \
